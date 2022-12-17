@@ -1,0 +1,14 @@
+[settings]
+os=Macos
+os_build=Macos
+arch=armv8
+arch_build=armv8
+compiler=clang
+compiler.version=15
+compiler.libcxx=libc++
+build_type=Release
+[options]
+[build_requires]
+[env]
+CC=/opt/homebrew/Cellar/llvm/15.0.6/bin/clang
+CXX=/opt/homebrew/Cellar/llvm/15.0.6/bin/clang++
