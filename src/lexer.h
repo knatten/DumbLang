@@ -1,5 +1,7 @@
 #pragma once
 
+#include "traits.h"
+
 #include <ostream>
 #include <vector>
 
@@ -53,10 +55,13 @@ namespace lexer
             }
         };
 
-        using token =
+        template <typename T>
+        concept Token = is_any<T, Let, Identifier, Assignment, Literal, Newline>::value;
+
+        using AnyToken =
             std::variant<Let, Identifier, Assignment, Literal, Newline>;
     } // namespace tokens
-    tokens::token to_token(const std::string &s);
-    std::vector<tokens::token> lex(std::istream &is);
-    void print_tokens(const std::vector<tokens::token> &tokens);
+    tokens::AnyToken to_token(const std::string &s);
+    std::vector<tokens::AnyToken> lex(std::istream &is);
+    void print_tokens(const std::vector<tokens::AnyToken> &tokens);
 } // namespace lexer

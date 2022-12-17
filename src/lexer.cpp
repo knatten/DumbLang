@@ -11,7 +11,7 @@
 namespace lexer
 {
 
-    tokens::token to_token(const std::string &s)
+    tokens::AnyToken to_token(const std::string &s)
     {
         if (s == "let")
             return tokens::Let{};
@@ -26,9 +26,9 @@ namespace lexer
         return tokens::Identifier{s};
     }
 
-    std::vector<tokens::token> lex(std::istream &is)
+    std::vector<tokens::AnyToken> lex(std::istream &is)
     {
-        std::vector<tokens::token> lexed_tokens;
+        std::vector<tokens::AnyToken> lexed_tokens;
         while (!is.eof())
         {
             const auto peek = is.peek();
@@ -47,12 +47,12 @@ namespace lexer
         return lexed_tokens;
     }
 
-    void print_tokens(const std::vector<tokens::token> &tokens)
+    void print_tokens(const std::vector<tokens::AnyToken> &tokens)
     {
         for (const auto &token : tokens)
         {
             std::visit(
-                []<typename T>(const T &t)
+                []<typename T>(const T &t) requires tokens::Token<T>
                 {
                     std::cout << t;
                     if constexpr (std::is_same_v<T, tokens::Newline>)
