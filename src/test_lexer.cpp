@@ -33,3 +33,24 @@ TEST_CASE("Comparing tokens")
     REQUIRE(Identifier{"foo"} != Identifier{"bar"});
     REQUIRE(Identifier{"foo"} == Identifier{"foo"});
 }
+
+TEST_CASE("lex")
+{
+    {
+        std::stringstream ss{"let x"};
+        const auto tokens = lexer::lex(ss);
+        REQUIRE_THAT(tokens,
+                     Equals(std::vector<AnyToken>{Let{}, Identifier{"x"}}));
+    }
+    {
+        std::stringstream ss{""};
+        const auto tokens = lexer::lex(ss);
+        REQUIRE_THAT(tokens, Equals(std::vector<AnyToken>{}));
+    }
+    {
+        std::stringstream ss{"let\n2"};
+        const auto tokens = lexer::lex(ss);
+        REQUIRE_THAT(tokens, Equals(std::vector<AnyToken>{Let{}, Newline{},
+                                                          Literal{2}}));
+    }
+}

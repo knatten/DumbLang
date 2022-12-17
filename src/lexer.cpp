@@ -26,7 +26,6 @@ namespace lexer
         return tokens::Identifier{s};
     }
 
-    // TODO use ; instead of line break, simplify this
     std::vector<tokens::AnyToken> lex(std::istream &is)
     {
         std::vector<tokens::AnyToken> lexed_tokens;

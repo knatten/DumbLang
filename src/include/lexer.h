@@ -86,7 +86,7 @@ namespace lexer
         } // namespace detail
 
         template <Token Tok1, Token Tok2>
-        bool operator==(const Tok1 tok1, const Tok2 tok2)
+        bool operator==(const Tok1& tok1, const Tok2& tok2)
         {
             if constexpr (!std::is_same_v<Tok1, Tok2>)
             {
