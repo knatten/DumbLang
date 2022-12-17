@@ -26,6 +26,7 @@ namespace lexer
         return tokens::Identifier{s};
     }
 
+    // TODO use ; instead of line break, simplify this
     std::vector<tokens::AnyToken> lex(std::istream &is)
     {
         std::vector<tokens::AnyToken> lexed_tokens;
@@ -52,7 +53,7 @@ namespace lexer
         for (const auto &token : tokens)
         {
             std::visit(
-                []<typename T>(const T &t) requires tokens::Token<T>
+                []<tokens::Token T>(const T &t)
                 {
                     std::cout << t;
                     if constexpr (std::is_same_v<T, tokens::Newline>)
