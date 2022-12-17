@@ -54,3 +54,19 @@ TEST_CASE("lex")
                                                           Literal{2}}));
     }
 }
+
+template <Token T> std::string to_string(T t)
+{
+    std::stringstream ss;
+    ss << t;
+    return ss.str();
+}
+
+TEST_CASE("ostream")
+{
+    REQUIRE("Let" == to_string(Let{}));
+    REQUIRE("Identifier(x)" == to_string(Identifier{"x"}));
+    REQUIRE("Assignment" == to_string(Assignment{}));
+    REQUIRE("Literal(2)" == to_string(Literal{2}));
+    REQUIRE("<CR>" == to_string(Newline{}));
+}

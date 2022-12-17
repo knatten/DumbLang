@@ -42,7 +42,7 @@ namespace lexer
             friend std::ostream &operator<<(std::ostream &os,
                                             const Literal &literal)
             {
-                os << "Identifier(" << literal.value << ")";
+                os << "Literal(" << literal.value << ")";
                 return os;
             }
         };
