@@ -11,5 +11,6 @@ conan_basic_setup()
 # Executable
 add_executable(main main.cpp lexer.cpp)
 
-add_executable(test test.cpp)
+add_executable(test test_lexer.cpp lexer.cpp)
+target_link_libraries(test Catch2Main Catch2)
 

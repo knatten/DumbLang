@@ -9,7 +9,7 @@ namespace lexer
     {
         struct Let
         {
-            friend std::ostream &operator<<(std::ostream &os, const Let &let)
+            friend std::ostream &operator<<(std::ostream &os, const Let &)
             {
                 os << "Let";
                 return os;
@@ -25,12 +25,12 @@ namespace lexer
                 return os;
             }
         };
-        struct Equals
+        struct Assignment
         {
             friend std::ostream &operator<<(std::ostream &os,
-                                            const Equals &equals)
+                                            const Assignment &)
             {
-                os << "Equals";
+                os << "Assignment";
                 return os;
             }
         };
@@ -46,17 +46,17 @@ namespace lexer
         };
         struct Newline
         {
-            friend std::ostream &operator<<(std::ostream &os,
-                                            const Newline &equals)
+            friend std::ostream &operator<<(std::ostream &os, const Newline &)
             {
                 os << "<CR>";
                 return os;
             }
         };
 
-        using token = std::variant<Let, Identifier, Equals, Literal, Newline>;
+        using token =
+            std::variant<Let, Identifier, Assignment, Literal, Newline>;
     } // namespace tokens
     tokens::token to_token(const std::string &s);
     std::vector<tokens::token> lex(std::istream &is);
     void print_tokens(const std::vector<tokens::token> &tokens);
-}
+} // namespace lexer

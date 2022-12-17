@@ -16,7 +16,9 @@ namespace lexer
         if (s == "let")
             return tokens::Let{};
         if (s == "=")
-            return tokens::Equals{};
+            return tokens::Assignment{};
+        if (s == "\n")
+            return tokens::Newline{};
         if (std::all_of(s.cbegin(), s.cend(), ::isdigit))
         {
             return tokens::Literal{std::stoi(s)};
@@ -52,15 +54,15 @@ namespace lexer
             std::visit(
                 []<typename T>(const T &t)
                 {
-                  std::cout << t;
-                  if constexpr (std::is_same_v<T, tokens::Newline>)
-                  {
-                      std::cout << "\n";
-                  }
-                  else
-                  {
-                      std::cout << " ";
-                  }
+                    std::cout << t;
+                    if constexpr (std::is_same_v<T, tokens::Newline>)
+                    {
+                        std::cout << "\n";
+                    }
+                    else
+                    {
+                        std::cout << " ";
+                    }
                 },
                 token);
         }
