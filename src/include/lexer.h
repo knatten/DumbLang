@@ -11,48 +11,29 @@ namespace lexer
     {
         struct Let
         {
-            friend std::ostream &operator<<(std::ostream &os, const Let &)
-            {
-                os << "Let";
-                return os;
-            }
+            static inline std::string display_name{"Let"};
         };
+
         struct Identifier
         {
+            static inline std::string display_name{"Identifier"};
             std::string value;
-            friend std::ostream &operator<<(std::ostream &os,
-                                            const Identifier &identifier)
-            {
-                os << "Identifier(" << identifier.value << ")";
-                return os;
-            }
         };
+
         struct Assignment
         {
-            friend std::ostream &operator<<(std::ostream &os,
-                                            const Assignment &)
-            {
-                os << "Assignment";
-                return os;
-            }
+            static inline std::string display_name{"Assignment"};
         };
+
         struct Literal
         {
+            static inline std::string display_name{"Literal"};
             int value;
-            friend std::ostream &operator<<(std::ostream &os,
-                                            const Literal &literal)
-            {
-                os << "Literal(" << literal.value << ")";
-                return os;
-            }
         };
+
         struct Newline
         {
-            friend std::ostream &operator<<(std::ostream &os, const Newline &)
-            {
-                os << "<CR>";
-                return os;
-            }
+            static inline std::string display_name{"<CR>"};
         };
 
         template <typename T>
@@ -86,13 +67,25 @@ namespace lexer
         } // namespace detail
 
         template <Token Tok1, Token Tok2>
-        bool operator==(const Tok1& tok1, const Tok2& tok2)
+        bool operator==(const Tok1 &tok1, const Tok2 &tok2)
         {
             if constexpr (!std::is_same_v<Tok1, Tok2>)
             {
                 return false;
             }
             return detail::has_same_value_if_any(tok1, tok2);
+        }
+
+        template <Token T> std::ostream &operator<<(std::ostream &os, const T &)
+        {
+            os << T::display_name;
+            return os;
+        }
+        template <TokenWithValue T>
+        std::ostream &operator<<(std::ostream &os, const T &token)
+        {
+            os << T::display_name << "(" << token.value << ")";
+            return os;
         }
     } // namespace tokens
     tokens::AnyToken to_token(const std::string &s);
