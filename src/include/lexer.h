@@ -3,6 +3,7 @@
 #include "traits.h"
 
 #include <ostream>
+#include <variant>
 #include <vector>
 
 namespace lexer
