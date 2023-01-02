@@ -1,5 +1,5 @@
   [requires]
-  catch2/3.2.0
+  catch2/2.13.9
 
   [generators]
   cmake
