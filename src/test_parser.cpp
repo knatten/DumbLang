@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <span>
+#include <sstream>
 #include <string>
 
 namespace ts = lexer::tokens;
@@ -153,3 +154,42 @@ TEST_CASE("Parse expression")
         REQUIRE_NOTHROW(getDowncastExpression<AST::Assignment>(parseResult));
     }
 }
+
+std::vector<std::unique_ptr<AST::Expression>> parse(std::string s)
+{
+    std::stringstream ss(std::move(s));
+    return parser::parse(ss);
+}
+
+TEST_CASE("Parse full program")
+{
+    SECTION("Parse empty program")
+    {
+        {
+            const auto ast = parse("");
+            REQUIRE(ast.size() == 0);
+        }
+        {
+            const auto ast = parse("\n");
+            REQUIRE(ast.size() == 0);
+        }
+    }
+    SECTION("Parse single line")
+    {
+        const auto ast = parse("let x = 42");
+        REQUIRE(ast.size() == 1);
+        REQUIRE_NOTHROW(downcast<AST::Assignment>(ast[0]));
+    }
+
+    SECTION("Parse multiple lines")
+    {
+        const auto ast = parse("let x = 42\nx");
+        REQUIRE(ast.size() == 2);
+        REQUIRE_NOTHROW(downcast<AST::Assignment>(ast[0]));
+        REQUIRE_NOTHROW(downcast<AST::Identifier>(ast[1]));
+    }
+
+    //TODO error handling. Expression with trailing tokens on same line, incomplete expression
+}
+
+// TODO write some custom matchers for expressions to improve tests

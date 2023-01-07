@@ -40,10 +40,14 @@ namespace lexer
             if (peek == '\n')
             {
                 lexed_tokens.push_back(tokens::Newline{});
+                is.ignore(1);
             }
-            std::string token;
-            is >> token;
-            lexed_tokens.push_back(to_token(token));
+            else
+            {
+                std::string token;
+                is >> token;
+                lexed_tokens.push_back(to_token(token));
+            }
         }
         return lexed_tokens;
     }

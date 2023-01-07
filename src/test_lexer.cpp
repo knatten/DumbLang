@@ -2,7 +2,6 @@
 
 #include <catch2/catch.hpp>
 
-
 #include <sstream>
 
 using Catch::Matchers::Equals;
@@ -41,7 +40,7 @@ TEST_CASE("lex")
         std::stringstream ss{"let x"};
         const auto tokens = lexer::lex(ss);
         CHECK_THAT(tokens,
-                     Equals(std::vector<AnyToken>{Let{}, Identifier{"x"}}));
+                   Equals(std::vector<AnyToken>{Let{}, Identifier{"x"}}));
     }
     {
         std::stringstream ss{""};
@@ -49,10 +48,15 @@ TEST_CASE("lex")
         CHECK_THAT(tokens, Equals(std::vector<AnyToken>{}));
     }
     {
+        std::stringstream ss{"\n"};
+        const auto tokens = lexer::lex(ss);
+        CHECK_THAT(tokens, Equals(std::vector<AnyToken>{Newline{}}));
+    }
+    {
         std::stringstream ss{"let\n2"};
         const auto tokens = lexer::lex(ss);
-        CHECK_THAT(tokens, Equals(std::vector<AnyToken>{Let{}, Newline{},
-                                                          Literal{2}}));
+        CHECK_THAT(tokens,
+                   Equals(std::vector<AnyToken>{Let{}, Newline{}, Literal{2}}));
     }
 }
 

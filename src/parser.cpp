@@ -97,4 +97,34 @@ namespace parser
         }
         return {tokens, nullptr};
     }
+
+    std::vector<std::unique_ptr<AST::Expression>> parse(TokenSpan tokens)
+    {
+        std::vector<std::unique_ptr<AST::Expression>> program;
+        while (!tokens.empty())
+        {
+            if (std::holds_alternative<ts::Newline>(tokens[0]))
+            {
+                tokens = tokens.subspan(1);
+                continue;
+            }
+            std::unique_ptr<AST::Expression> expression;
+            std::tie(tokens, expression) = parseExpression(tokens);
+            if (expression)
+            {
+                program.push_back(std::move(expression));
+            }
+            else
+            {
+                throw std::runtime_error("parse error");
+            }
+        }
+        return program;
+    }
+
+    std::vector<std::unique_ptr<AST::Expression>> parse(std::istream &is)
+    {
+        auto tokens = lexer::lex(is);
+        return parse(tokens);
+    }
 } // namespace parser
