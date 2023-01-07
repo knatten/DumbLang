@@ -3,7 +3,9 @@ Toy project for learning LLVM and some modern C++ stuff. Don't come here for bes
 ![CI](https://github.com/knatten/DumbLang/actions/workflows/ci.yml/badge.svg)
 
 
-Currently only tested on LLVM 15
+Requirements:
+- Currently only tested on LLVM 15.
+- Conan. E.g. `pip install conan`
 
 ```
 mkdir build && cd build
