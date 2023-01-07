@@ -12,4 +12,4 @@ cd $BUILD_DIR || $?
 conan install $SRC_DIR --profile=$CI_DIR/conan-profiles/release  --build=missing || $?
 cmake -S $SRC_DIR -B $BUILD_DIR -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER || $?
 cmake --build $BUILD_DIR || $?
-$BUILD_DIR/bin/test || $? #TODO ctest
+ctest || $?
