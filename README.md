@@ -1,5 +1,8 @@
 Toy project for learning LLVM and some modern C++ stuff. Don't come here for best practices.
 
+![CI](https://github.com/knatten/DumbLang/actions/workflows/ci.yml/badge.svg)
+
+
 Currently only tested on LLVM 15
 
 ```

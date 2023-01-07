@@ -1,0 +1,11 @@
+[settings]
+os=Linux
+arch=x86_64
+compiler=clang
+compiler.version=15
+compiler.libcxx=libstdc++11
+[options]
+[build_requires]
+[env]
+CC=clang-15
+CXX=clang++-15
