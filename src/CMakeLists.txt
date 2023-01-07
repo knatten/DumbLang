@@ -16,4 +16,3 @@ target_link_libraries(main dumblang)
 
 add_executable(test test_lexer.cpp test_parser.cpp test_main.cpp)
 target_link_libraries(test CONAN_PKG::catch2 dumblang)
-
