@@ -22,17 +22,6 @@ const T &getExpression(const parser::ParseResult<T> &result)
     return *up;
 }
 
-template <typename To, typename From>
-const To &downcast(const std::unique_ptr<From> &from)
-{
-    const To *to = dynamic_cast<const To *>(from.get());
-    if (!to)
-    {
-        throw std::runtime_error("Could not downcast");
-    }
-    return *to;
-}
-
 template <typename T>
 const T &
 getDowncastExpression(const parser::ParseResult<AST::Expression> &parseResult)
@@ -90,23 +79,21 @@ TEST_CASE("Parse assignment")
     {
         std::vector<ts::AnyToken> tokens{ts::Let{}, ts::Identifier{"x"},
                                          ts::Assignment{}, ts::Literal{2}};
+        AST::Assignment expected{std::make_unique<AST::Identifier>("x"),
+                                 std::make_unique<AST::Literal>(2)};
         const auto parseResult = parser::parseAssignment(tokens);
+        REQUIRE(getExpression(parseResult) == expected);
         REQUIRE(std::get<parser::TokenSpan>(parseResult).size() == 0);
-        const auto &assignment = getExpression(parseResult);
-        REQUIRE(assignment.lhs->name == "x");
-        const auto &rhs = downcast<AST::Literal>(assignment.rhs);
-        REQUIRE(rhs.value == 2);
     }
     SECTION("Assign from identifier")
     {
         std::vector<ts::AnyToken> tokens{ts::Let{}, ts::Identifier{"x"},
                                          ts::Assignment{}, ts::Identifier{"y"}};
+        AST::Assignment expected{std::make_unique<AST::Identifier>("x"),
+                                 std::make_unique<AST::Identifier>("y")};
         const auto parseResult = parser::parseAssignment(tokens);
+        REQUIRE(getExpression(parseResult) == expected);
         REQUIRE(std::get<parser::TokenSpan>(parseResult).size() == 0);
-        const auto &assignment = getExpression(parseResult);
-        REQUIRE(assignment.lhs->name == "x");
-        const auto &rhs = downcast<AST::Identifier>(assignment.rhs);
-        REQUIRE(rhs.name == "y");
     }
     SECTION("Not assignment")
     {
@@ -114,10 +101,14 @@ TEST_CASE("Parse assignment")
         const auto parseResult = parser::parseAssignment(tokens);
         REQUIRE(std::get<parser::TokenSpan>(parseResult).size() ==
                 tokens.size());
+        REQUIRE(std::get<std::unique_ptr<AST::Assignment>>(parseResult) ==
+                nullptr);
         tokens.clear();
         const auto parseResult2 = parser::parseAssignment(tokens);
         REQUIRE(std::get<parser::TokenSpan>(parseResult2).size() ==
                 tokens.size());
+        REQUIRE(std::get<std::unique_ptr<AST::Assignment>>(parseResult2) ==
+                nullptr);
     }
     SECTION("Malformed assignment")
     {
@@ -134,15 +125,16 @@ TEST_CASE("Parse expression")
         std::vector<ts::AnyToken> tokens{ts::Literal{2}, ts::Identifier{"2"}};
         const auto parseResult = parser::parseExpression(tokens);
         REQUIRE(std::get<parser::TokenSpan>(parseResult).size() == 1);
-        REQUIRE(getDowncastExpression<AST::Literal>(parseResult).value == 2);
+        REQUIRE(getDowncastExpression<AST::Literal>(parseResult) ==
+                AST::Literal{2});
     }
     SECTION("Parse identifier")
     {
         std::vector<ts::AnyToken> tokens{ts::Identifier{"x"}, ts::Literal{2}};
         const auto parseResult = parser::parseExpression(tokens);
         REQUIRE(std::get<parser::TokenSpan>(parseResult).size() == 1);
-        REQUIRE(getDowncastExpression<AST::Identifier>(parseResult).name ==
-                "x");
+        REQUIRE(getDowncastExpression<AST::Identifier>(parseResult) ==
+                AST::Identifier{"x"});
     }
     SECTION("Parse assignment")
     {
@@ -151,7 +143,10 @@ TEST_CASE("Parse expression")
                                          ts::Let{}};
         const auto parseResult = parser::parseExpression(tokens);
         REQUIRE(std::get<parser::TokenSpan>(parseResult).size() == 1);
-        REQUIRE_NOTHROW(getDowncastExpression<AST::Assignment>(parseResult));
+        AST::Assignment expected{std::make_unique<AST::Identifier>("x"),
+                                 std::make_unique<AST::Identifier>("y")};
+        REQUIRE(getDowncastExpression<AST::Assignment>(parseResult) ==
+                expected);
     }
 }
 
@@ -166,30 +161,36 @@ TEST_CASE("Parse full program")
     SECTION("Parse empty program")
     {
         {
-            const auto ast = parse("");
-            REQUIRE(ast.expressions.size() == 0);
+            const auto program = parse("");
+            REQUIRE(program.expressions.size() == 0);
         }
         {
-            const auto ast = parse("\n");
-            REQUIRE(ast.expressions.size() == 0);
+            const auto program = parse("\n");
+            REQUIRE(program.expressions.size() == 0);
         }
     }
     SECTION("Parse single line")
     {
-        const auto ast = parse("let x = 42");
-        REQUIRE(ast.expressions.size() == 1);
-        REQUIRE_NOTHROW(downcast<AST::Assignment>(ast.expressions[0]));
+        const auto program = parse("let x = 42");
+        REQUIRE(program.expressions.size() == 1);
+        AST::Assignment expected{std::make_unique<AST::Identifier>("x"),
+                                 std::make_unique<AST::Literal>(42)};
+        REQUIRE(program.expressions.size() == 1);
+        REQUIRE(*(program.expressions[0]) == expected);
     }
 
     SECTION("Parse multiple lines")
     {
-        const auto ast = parse("let x = 42\nx");
-        REQUIRE(ast.expressions.size() == 2);
-        REQUIRE_NOTHROW(downcast<AST::Assignment>(ast.expressions[0]));
-        REQUIRE_NOTHROW(downcast<AST::Identifier>(ast.expressions[1]));
+        const auto program = parse("let x = 42\nx");
+        REQUIRE(program.expressions.size() == 2);
+        AST::Assignment expected1{std::make_unique<AST::Identifier>("x"),
+                                  std::make_unique<AST::Literal>(42)};
+        AST::Identifier expected2{"x"};
+        REQUIRE(program.expressions.size() == 2);
+        REQUIRE(*(program.expressions[0]) == expected1);
+        REQUIRE(*(program.expressions[1]) == expected2);
     }
 
-    //TODO error handling. Expression with trailing tokens on same line, incomplete expression
+    // TODO error handling. Expression with trailing tokens on same line,
+    // incomplete expression
 }
-
-// TODO write some custom matchers for expressions to improve tests
