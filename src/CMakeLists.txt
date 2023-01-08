@@ -11,6 +11,4 @@ conan_basic_setup(TARGETS)
 enable_testing()
 
 add_subdirectory(libdumblang)
-
-add_executable(main main.cpp)
-target_link_libraries(main dumblang)
+add_subdirectory(dumblang)
