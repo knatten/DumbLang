@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "ast.h"
 
 namespace ts = lexer::tokens;
 
@@ -7,6 +8,10 @@ namespace
 
     struct NullExpression : AST::Expression
     {
+        void accept(AST::Visitor &visitor) const override
+        {
+            visitor.visit(*this);
+        }
     };
     template <typename T> T *get_token_if(parser::TokenSpan tokens)
     {

@@ -1,9 +1,9 @@
+#include "ast_dumper.h"
 #include "parser.h"
 
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 
 int main(int argc, char *argv[])
 {
@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
     }
 
     std::cout << "-----\n";
-    lexer::print_tokens(lexer::lex(ifs));
-    std::cout << "\n-----\n";
+    const auto program = parser::parse(ifs);
+    AST::AstDumper{program, std::cout}.dump();
+    std::cout << "-----\n";
 }
