@@ -24,4 +24,4 @@ cmake -S $SRC_DIR -B $BUILD_DIR -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPI
 cmake --build $BUILD_DIR || exit $?
 
 ctest || exit $?
-$BUILD_DIR/bin/dumblang || exit $? # Just check that it runs
+$BUILD_DIR/bin/dumblang ../../../examples/example.dumb || exit $? # Just check that it runs
