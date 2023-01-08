@@ -12,8 +12,8 @@ namespace parser
     template <typename Expression>
     using ParseResult = std::tuple<TokenSpan, std::unique_ptr<Expression>>;
 
-    std::vector<std::unique_ptr<AST::Expression>> parse(TokenSpan tokens);
-    std::vector<std::unique_ptr<AST::Expression>> parse(std::istream &is);
+    AST::Program parse(TokenSpan tokens);
+    AST::Program parse(std::istream &is);
     ParseResult<AST::Identifier> parseIdentifier(TokenSpan tokens);
     ParseResult<AST::Identifier> parseIdentifier(TokenSpan tokens);
     ParseResult<AST::Literal> parseLiteral(TokenSpan tokens);

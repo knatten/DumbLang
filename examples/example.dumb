@@ -1,2 +1,2 @@
 let x = 42
-let y = x + 3
+let y = x
