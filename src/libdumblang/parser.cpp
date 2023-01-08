@@ -103,9 +103,9 @@ namespace parser
         return {tokens, nullptr};
     }
 
-    std::vector<std::unique_ptr<AST::Expression>> parse(TokenSpan tokens)
+    AST::Program parse(TokenSpan tokens)
     {
-        std::vector<std::unique_ptr<AST::Expression>> program;
+        AST::Program program;
         while (!tokens.empty())
         {
             if (std::holds_alternative<ts::Newline>(tokens[0]))
@@ -117,7 +117,7 @@ namespace parser
             std::tie(tokens, expression) = parseExpression(tokens);
             if (expression)
             {
-                program.push_back(std::move(expression));
+                program.expressions.push_back(std::move(expression));
             }
             else
             {
@@ -127,7 +127,7 @@ namespace parser
         return program;
     }
 
-    std::vector<std::unique_ptr<AST::Expression>> parse(std::istream &is)
+    AST::Program parse(std::istream &is)
     {
         auto tokens = lexer::lex(is);
         return parse(tokens);

@@ -19,7 +19,7 @@ namespace AST
 
     void AstDumper::dump()
     {
-        for (const auto &expr : m_program)
+        for (const auto &expr : m_program.expressions)
         {
             expr->accept(*this);
         }

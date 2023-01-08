@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace AST
 {
@@ -49,5 +50,10 @@ namespace AST
         void accept(Visitor &visitor) const override { visitor.visit(*this); }
         std::unique_ptr<Identifier> lhs;
         std::unique_ptr<Expression> rhs;
+    };
+
+    struct Program
+    {
+        std::vector<std::unique_ptr<Expression>> expressions;
     };
 } // namespace AST

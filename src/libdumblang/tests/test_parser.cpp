@@ -155,7 +155,7 @@ TEST_CASE("Parse expression")
     }
 }
 
-std::vector<std::unique_ptr<AST::Expression>> parse(std::string s)
+AST::Program parse(std::string s)
 {
     std::stringstream ss(std::move(s));
     return parser::parse(ss);
@@ -167,26 +167,26 @@ TEST_CASE("Parse full program")
     {
         {
             const auto ast = parse("");
-            REQUIRE(ast.size() == 0);
+            REQUIRE(ast.expressions.size() == 0);
         }
         {
             const auto ast = parse("\n");
-            REQUIRE(ast.size() == 0);
+            REQUIRE(ast.expressions.size() == 0);
         }
     }
     SECTION("Parse single line")
     {
         const auto ast = parse("let x = 42");
-        REQUIRE(ast.size() == 1);
-        REQUIRE_NOTHROW(downcast<AST::Assignment>(ast[0]));
+        REQUIRE(ast.expressions.size() == 1);
+        REQUIRE_NOTHROW(downcast<AST::Assignment>(ast.expressions[0]));
     }
 
     SECTION("Parse multiple lines")
     {
         const auto ast = parse("let x = 42\nx");
-        REQUIRE(ast.size() == 2);
-        REQUIRE_NOTHROW(downcast<AST::Assignment>(ast[0]));
-        REQUIRE_NOTHROW(downcast<AST::Identifier>(ast[1]));
+        REQUIRE(ast.expressions.size() == 2);
+        REQUIRE_NOTHROW(downcast<AST::Assignment>(ast.expressions[0]));
+        REQUIRE_NOTHROW(downcast<AST::Identifier>(ast.expressions[1]));
     }
 
     //TODO error handling. Expression with trailing tokens on same line, incomplete expression

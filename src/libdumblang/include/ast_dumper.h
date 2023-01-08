@@ -5,8 +5,7 @@ namespace AST
     class AstDumper : Visitor
     {
       public:
-        AstDumper(const std::vector<std::unique_ptr<Expression>> &program,
-                  std::ostream &os)
+        AstDumper(const Program &program, std::ostream &os)
             : m_program(program), m_os(os)
         {
         }
@@ -21,7 +20,7 @@ namespace AST
         template <typename Info>
         void print(std::string_view expr_name, const Info &info);
 
-        const std::vector<std::unique_ptr<Expression>> &m_program;
+        const Program &m_program;
         std::ostream &m_os;
         size_t m_indentation{0};
 
