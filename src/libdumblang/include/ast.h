@@ -75,5 +75,7 @@ namespace AST
     struct Program
     {
         std::vector<std::unique_ptr<Expression>> expressions;
+        bool operator==(const Program& other) const;
+        //TODO equality operator and use it in tests
     };
 } // namespace AST

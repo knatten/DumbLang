@@ -14,6 +14,8 @@ namespace parser
 
     AST::Program parse(TokenSpan tokens);
     AST::Program parse(std::istream &is);
+    AST::Program parse(std::string s);
+
     ParseResult<AST::Identifier> parseIdentifier(TokenSpan tokens);
     ParseResult<AST::Identifier> parseIdentifier(TokenSpan tokens);
     ParseResult<AST::Literal> parseLiteral(TokenSpan tokens);

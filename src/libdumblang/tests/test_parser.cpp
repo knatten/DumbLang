@@ -150,28 +150,22 @@ TEST_CASE("Parse expression")
     }
 }
 
-AST::Program parse(std::string s)
-{
-    std::stringstream ss(std::move(s));
-    return parser::parse(ss);
-}
-
 TEST_CASE("Parse full program")
 {
     SECTION("Parse empty program")
     {
         {
-            const auto program = parse("");
+            const auto program = parser::parse("");
             REQUIRE(program.expressions.size() == 0);
         }
         {
-            const auto program = parse("\n");
+            const auto program = parser::parse("\n");
             REQUIRE(program.expressions.size() == 0);
         }
     }
     SECTION("Parse single line")
     {
-        const auto program = parse("let x = 42");
+        const auto program = parser::parse("let x = 42");
         REQUIRE(program.expressions.size() == 1);
         AST::Assignment expected{std::make_unique<AST::Identifier>("x"),
                                  std::make_unique<AST::Literal>(42)};
@@ -181,7 +175,7 @@ TEST_CASE("Parse full program")
 
     SECTION("Parse multiple lines")
     {
-        const auto program = parse("let x = 42\nx");
+        const auto program = parser::parse("let x = 42\nx");
         REQUIRE(program.expressions.size() == 2);
         AST::Assignment expected1{std::make_unique<AST::Identifier>("x"),
                                   std::make_unique<AST::Literal>(42)};
@@ -189,6 +183,7 @@ TEST_CASE("Parse full program")
         REQUIRE(program.expressions.size() == 2);
         REQUIRE(*(program.expressions[0]) == expected1);
         REQUIRE(*(program.expressions[1]) == expected2);
+        //TODO should use operator== for Program here. But then need better way to initialize it.
     }
 
     // TODO error handling. Expression with trailing tokens on same line,

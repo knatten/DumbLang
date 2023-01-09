@@ -1,4 +1,5 @@
 #include "ast.h"
+#include "parser.h"
 
 #include <catch2/catch.hpp>
 
@@ -39,4 +40,16 @@ TEST_CASE("Comparing AST nodes")
     REQUIRE(i1 != l1);
     REQUIRE(i1 != a1);
     REQUIRE(a1 != l1);
+}
+
+TEST_CASE("Comparing programs")
+{
+    //Cheat and use parser here since it's cumbersome to create vector of unique_ptr
+    //TODO maybe instead make a better factory function or constructor. But how to do that for nested expressions?
+    AST::Program p1 = parser::parse("let x = 42\n let y = x");
+    AST::Program p2 = parser::parse("let x = 40\n let y = x");
+    AST::Program p3 = parser::parse("let x = 42\n let y = x");
+    REQUIRE(p1 == p1);
+    REQUIRE(p1 != p2);
+    REQUIRE(p1 == p3);
 }

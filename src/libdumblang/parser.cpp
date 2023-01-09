@@ -1,6 +1,8 @@
 #include "parser.h"
 #include "ast.h"
 
+#include <sstream>
+
 namespace ts = lexer::tokens;
 
 namespace
@@ -132,5 +134,11 @@ namespace parser
     {
         auto tokens = lexer::lex(is);
         return parse(tokens);
+    }
+
+    AST::Program parse(std::string s)
+    {
+        std::stringstream ss(std::move(s));
+        return parser::parse(ss);
     }
 } // namespace parser
