@@ -12,6 +12,7 @@ namespace
         {
             visitor.visit(*this);
         }
+        bool equals(const AST::Expression &) const override { return true; }
     };
     template <typename T> T *get_token_if(parser::TokenSpan tokens)
     {

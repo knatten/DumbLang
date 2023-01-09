@@ -24,12 +24,21 @@ namespace AST
     {
         virtual ~Expression() {}
         virtual void accept(Visitor &visitor) const = 0;
+        virtual bool equals(const Expression &other) const = 0;
+        bool operator==(const Expression &other) const
+        {
+            return typeid(*this) == typeid(other) && equals(other);
+        }
     };
 
     struct Identifier : Expression
     {
         Identifier(std::string name_) : name(std::move(name_)) {}
         void accept(Visitor &visitor) const override { visitor.visit(*this); }
+        bool equals(const Expression &other) const override
+        {
+            return name == dynamic_cast<const Identifier &>(other).name;
+        }
         std::string name;
     };
 
@@ -37,6 +46,10 @@ namespace AST
     {
         Literal(int value_) : value(value_) {}
         void accept(Visitor &visitor) const override { visitor.visit(*this); }
+        bool equals(const Expression &other) const override
+        {
+            return value == dynamic_cast<const Literal &>(other).value;
+        }
         int value;
     };
 
@@ -48,6 +61,13 @@ namespace AST
         {
         }
         void accept(Visitor &visitor) const override { visitor.visit(*this); }
+        bool equals(const Expression &other) const override
+        {
+            const auto &otherAssignment =
+                dynamic_cast<const Assignment &>(other);
+            return *lhs == *(otherAssignment.lhs) &&
+                   *rhs == *(otherAssignment.rhs);
+        }
         std::unique_ptr<Identifier> lhs;
         std::unique_ptr<Expression> rhs;
     };
