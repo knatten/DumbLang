@@ -1,5 +1,8 @@
 #include "ast_dumper.h"
 #include "parser.h"
+#include "version.h"
+
+#include <argparse/argparse.hpp>
 
 #include <filesystem>
 #include <fstream>
@@ -7,32 +10,47 @@
 
 int main(int argc, char *argv[])
 {
-    // TODO Use CLI library. Clipp is unmaintained, find another one
-    if (argc != 2)
+    argparse::ArgumentParser args("dumblang", version);
+    args.add_argument("input_file").help("The .dumb file to compile");
+    args.add_argument("-d", "--dump-ast")
+        .help("Dump ast to stdout")
+        .default_value(false)
+        .implicit_value(true);
+    try
     {
-        std::cerr << "USAGE: " << argv[0] << "<input file" << std::endl;
-        return 1;
+        args.parse_args(argc, argv);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << std::endl;
+        std::cerr << args;
+        std::exit(1);
     }
 
-    std::filesystem::path infile{argv[1]};
-    std::cout << "Input file: " << infile << std::endl;
+    const std::string input_file_name = args.get("input_file");
+    const std::filesystem::path input_file{input_file_name};
+    std::cout << "Input file: " << input_file << std::endl;
 
-    if (!std::filesystem::exists(infile))
+    if (!std::filesystem::exists(input_file))
     {
-        std::cerr << "Input file " << infile << " does not exist";
+        std::cerr << "Input file " << input_file << " does not exist";
         return 1;
     }
 
     std::ifstream ifs;
-    ifs.open(infile, std::ifstream::in);
+    ifs.open(input_file, std::ifstream::in);
     if (!ifs.is_open())
     {
-        std::cerr << "Failed to open " << infile << std::endl;
+        std::cerr << "Failed to open " << input_file << std::endl;
         return 1;
     }
 
-    std::cout << "-----\n";
     const auto program = parser::parse(ifs);
-    AST::AstDumper{program, std::cout}.dump();
-    std::cout << "-----\n";
+    std::cout << "Successfully parsed '" << input_file_name << "'\n";
+    if (args["--dump-ast"] == true)
+    {
+        std::cout << "-----\n";
+        AST::AstDumper{program, std::cout}.dump();
+        std::cout << "-----\n";
+    }
 }
