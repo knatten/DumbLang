@@ -1,4 +1,5 @@
 [requires]
+argparse/2.9
 catch2/2.13.9
 fmt/9.1.0 # TODO see if we can move to std::format when we bump LLVM
 
