@@ -5,7 +5,7 @@ arch=armv8
 arch_build=armv8
 compiler=clang
 compiler.version=15
-compiler.libcxx=libstdc++11
+compiler.libcxx=libc++
 [options]
 [build_requires]
 [env]
