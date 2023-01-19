@@ -2,10 +2,9 @@
 os=Linux
 arch=x86_64
 compiler=clang
+compiler.cppstd=20
 compiler.version=15
 compiler.libcxx=libstdc++11
-[options]
-[build_requires]
-[env]
+[buildenv]
 CC=clang-15
 CXX=clang++-15
