@@ -8,4 +8,4 @@ wget https://apt.llvm.org/llvm.sh || exit $?
 chmod +x llvm.sh || exit $?
 sudo ./llvm.sh 15|| exit $?
 sudo apt install clang-format-15 || exit $?
-pip install conan || exit $?
+pip install "conan==2.0.0b8" || exit $?
