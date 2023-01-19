@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sudo apt-get update || exit $?
-sudo apt-get install --assume-yes lsb-release software-properties-common || exit $?
+sudo apt-get install --assume-yes lsb-release software-properties-common wget pip cmake|| exit $?
 TMP_DIR=$(mktemp -d)
 pushd $TMP_DIR || exit $?
 wget https://apt.llvm.org/llvm.sh || exit $?
