@@ -5,13 +5,13 @@ Toy project for learning LLVM and some modern C++ stuff. Don't come here for bes
 
 Requirements:
 - Currently only tested on LLVM 15, on macOS and Linux.
-- Conan. E.g. `pip install conan`. Profiles exist for Linux/x86_64 and Mac/armv8.
+- Conan 2. E.g. `pip install "conan==2.0.0b8"`. Profiles exist for Linux/x86_64 and Mac/armv8, but you can use your own.
 
 ### Setup and build
 
 ```
 mkdir build && cd build
-conan install ../src/ --profile=<your conan profile>  --build=missing
+conan install ../src/ -pr=<your conan profile> --build=missing -of=.
 cmake ../src/
 cmake --build -DCMAKE_BUILD_TYPE=<See below>
 ctest
