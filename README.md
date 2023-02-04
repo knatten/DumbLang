@@ -7,7 +7,8 @@ Toy project for learning LLVM and some modern C++ stuff. Don't come here for bes
 
 Requirements:
 - Currently only tested on LLVM 15, on macOS and Linux.
-- Conan 2. E.g. `pip install "conan==2.0.0b8"`. Profiles exist for Linux/x86_64 and Mac/armv8, but you can use your own.
+- Python
+- `pip install -r ci/requirements.txt` (preferably in a virtualenv)
 - If you want to use the Docker script, you also need Docker (on macOS, also coreutils, e.g. `brew install coreutils`)
 
 ### Setup and build
