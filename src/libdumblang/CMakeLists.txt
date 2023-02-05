@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 project(LibDumbLang)
 
-add_library(dumblang lexer.cpp parser.cpp ast_dumper.cpp)
+add_library(dumblang lexer.cpp parser.cpp ast_dumper.cpp module_impl.cpp module.cpp)
 target_include_directories(dumblang PUBLIC include)
-target_link_libraries(dumblang fmt::fmt)
 
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
@@ -19,6 +18,7 @@ target_link_libraries(LLVM_WRAPPER INTERFACE LLVM${ARCHITECTURE}AsmParser LLVM${
 target_compile_definitions(LLVM_WRAPPER INTERFACE ${LLVM_DEFINITIONS})
 
 add_executable(test_compile compile.cpp)
-target_link_libraries(test_compile PRIVATE LLVM_WRAPPER fmt::fmt)
+target_link_libraries(test_compile PRIVATE LLVM_WRAPPER fmt::fmt dumblang)
+target_link_libraries(dumblang PRIVATE LLVM_WRAPPER fmt::fmt)
 
 add_subdirectory(tests)
