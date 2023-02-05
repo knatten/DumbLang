@@ -17,7 +17,7 @@ Requirements:
 mkdir build && cd build
 conan install ../src/ -pr=<your conan profile> --build=missing -of=.
 cmake ../src/
-cmake --build -DCMAKE_BUILD_TYPE=<See below>
+cmake --build -DCMAKE_BUILD_TYPE=<See below> -DARCHITECTURE=<X86|AArch64>
 ctest
 ```
 
